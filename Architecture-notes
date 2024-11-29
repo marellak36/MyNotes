@@ -1,3 +1,11 @@
+Example Use Case: Solar Telemetry Pipeline
+Scenario
+Solar panels send telemetry data (e.g., power output, panel temperature) to a centralized processing system every 30 minutes.
+The data flows through several stages:
+Ingress: Data is ingested using Google Pub/Sub.
+Processing: Data is processed via Cloud Functions.
+Storage: Data is stored in BigQuery for analytics and Bigtable for time-series lookups.
+
 comparison table:
 
 | **Category**             | **GCP Tool**          | **AWS Tool**               | **Open-Source Equivalent**                  | **Other Comparable Tools**             |
