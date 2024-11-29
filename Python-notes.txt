@@ -1,0 +1,63 @@
+# Variables and Data Types
+name = "DevOps Engineer"  # string
+age = 30                 # integer
+is_active = True         # boolean
+skills = ["Python", "Bash", "Terraform"]  # list
+
+# Conditional Statements
+if age > 18:
+    print("Eligible for the role.")
+else:
+    print("Not eligible.")
+
+# Loops
+for skill in skills:
+    print(skill)
+
+# Functions
+def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("x"))
+
+# Importing Modules
+import os
+print(os.getcwd())  # Prints current working directory
+
+# Reading from a file
+with open("log.txt", "r") as file:
+    logs = file.readlines()
+    print(logs)
+
+# Writing to a file
+with open("output.txt", "w") as file:
+    file.write("Deployment Successful!")
+
+# Extract error messages from logs
+with open("logfile.txt", "r") as file:
+    for line in file:
+        if "ERROR" in line:
+            print(line.strip())
+try:
+    with open("nonexistent.txt", "r") as file:
+        print(file.read())
+except FileNotFoundError:
+    print("File not found!")
+
+server = "web-server-01"
+status = "active"
+print(f"Server {server} is currently {status}.")
+
+# Monitor server until it is 'active'
+status = "inactive"
+while status != "active":
+    print("Checking server...")
+    status = "active"  # Simulating a status change
+print("Server is now active!")
+
+# Monitor server until it is 'active'
+status = "inactive"
+while status != "active":
+    print("Checking server...")
+    status = "active"  # Simulating a status change
+print("Server is now active!")
