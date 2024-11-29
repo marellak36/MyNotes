@@ -22,7 +22,6 @@ comparison table:
 3. **Redis**: Open-source in-memory key-value store equivalent to Memorystore or ElastiCache.
 4. **SingleStore**: A distributed SQL database for analytics and transactions, with competitors like CockroachDB and YugabyteDB in the open-source ecosystem.
 
-If you'd like more details on setup or use cases for any of these tools, let me know!
 
 Apache Beam, Apache Spark, and Apache Flink are all powerful distributed data processing frameworks, but they serve slightly different purposes, and their capabilities and focus areas vary. Here's a detailed comparison:
 
