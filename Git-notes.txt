@@ -1,0 +1,16 @@
+git clone 
+git add .
+git commit -m ""
+git push origin ""
+
+— Git  rebase —
+Git reset “master commit”  “5541c2ecaad1b89448”
+Git stash 
+Git pull origin master
+Git stash pop
+Git add , commit 
+Git push —force
+
+Git cherrypick 
+git reset --mixed [commit-hash]
+git rebase -i HEAD~
