@@ -1,0 +1,47 @@
+
+tfenv use "version" //Switch between multiple tf version
+TFENV_ARCH=amd64 tfenv install 0.15.5  //Install in Macos
+terraform import aws_lambda_function.**_lambda arn:aws:lambda:us-west-2:569:function:dev-payload_lambda_function - Import existing resources // Import existing resources to state
+
+terraform init -input=false -lock=${{ inputs.use_lock }} \  // AWS
+        -backend-config="key=${{ inputs.repo }}" \
+        -backend-config="region=${{ inputs.aws_region }}" \
+        -backend-config="access_key=${{ inputs.aws_access_key }}" \
+        -backend-config="secret_key=${{ inputs.aws_secret_key }}" \
+        -backend-config="bucket=${{ inputs.project }}-terraform-artifacts"
+      working-directory: ${{ inputs.terraform_working_directory }}
+      env:
+        GIT_SSH_COMMAND: "ssh -i $HOME/.cert/id_rsa -o StrictHostKeyChecking=no"
+        TF_VAR_env_name: ${{ inputs.env_name }}   // Environment-specific details (like AWS region, credentials, or project names) are kept outside the Terraform configuration files, making the code more reusable and modular.
+        TF_WORKSPACE: ${{ inputs.workspace }}
+        TF_VAR_prefix: ${{ inputs.workspace }}
+        TF_VAR_project: ${{ inputs.project }}
+        TF_VAR_repo: ${{ inputs.repo }}
+        TF_VAR_aws_access_key: ${{ inputs.aws_access_key }}
+        TF_VAR_aws_secret_key: ${{ inputs.aws_secret_key }}
+        TF_VAR_aws_region: ${{ inputs.aws_region }}
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+
+terraform init -input=false -backend-config="bucket=${{ inputs.remote_backend }}" -lock=${{ inputs.use_lock }}  // GCP
+      working-directory: ${{ inputs.terraform_working_directory }}
+      env:
+        GIT_SSH_COMMAND: "ssh -i $HOME/.cert/id_rsa -o StrictHostKeyChecking=no"
+        TF_WORKSPACE: ${{ inputs.env_name }}
+        TF_VAR_provider_creds: ${{ inputs.gcp_provider_creds }}
+        TF_VAR_provider_projectId: ${{ inputs.gcp_project_id }}
+        TF_VAR_env_name: ${{ inputs.env_name }}
+        GOOGLE_CREDENTIALS: ${{ inputs.gcp_provider_creds }}
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        TF_VAR_REMOTE_BACKEND: ${{ inputs.remote_backend }}
+
+terraform fmt -recursive
+      working-directory: ${{ inputs.terraform_working_directory }}
+
+terraform validate
+      working-directory: ${{ inputs.terraform_working_directory }}
+
+ terraform workspace select -or-create ${{ inputs.workspace }}
+
+Modules - reusuable code
+locals - strctly to a module.. users can't call or modify
+variables - can be edited by users who is calling a module
