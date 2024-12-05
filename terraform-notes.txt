@@ -34,13 +34,39 @@ terraform init -input=false -backend-config="bucket=${{ inputs.remote_backend }}
         GITHUB_TOKEN: ${{ inputs.github_token }}
         TF_VAR_REMOTE_BACKEND: ${{ inputs.remote_backend }}
 
-terraform fmt -recursive
+terraform fmt -recursive -check
       working-directory: ${{ inputs.terraform_working_directory }}
 
 terraform validate
       working-directory: ${{ inputs.terraform_working_directory }}
 
  terraform workspace select -or-create ${{ inputs.workspace }}
+
+####### Terraform State Migration:
+
+* Change directory to /terraform and execute the following commands:
+    * terraform state pull > destination.tfstate
+    * Validate resources in pulled tfstate file terraform state list -state=destination.tfstate | wc -l
+
+* Move both state files into the newly created directory:
+    * mv /path/to/source.tfstate merge-state
+    * mv /path/to/destination.tfstate merge-state
+* Change to the merge-state directory:
+    * cd merge-state
+* Generate a list of resources text file for both state files
+    * terraform state list -state=destination.tfstate > destination-resources.txt
+    * terraform state list -state=source.tfstate > source-resources.txt
+* Check the number of resources in each text file.
+    * wc -l source-resources.txt 
+    * wc -l destination-resources.txt
+* Create migrate.sh script with the following content. This will move the resources from source.tfstate to destination.tfstate file.
+
+#!/bin/bash
+#Merge tf resources
+set -eu
+while IFS= read -r resource; do
+    terraform state mv -state=source.tfstate -state-out=destination.tfstate "$resource" "$resource"
+done < source-resources.txt
 
 Modules - reusuable code
 locals - strctly to a module.. users can't call or modify
